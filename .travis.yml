@@ -1,9 +1,19 @@
 language: python
+env:
+  global:
+    CC_TEST_REPORTER_ID=c76682da4ab8561653efe5e30d0fb64f7500e80115726587a908acf3bac5de87
 python:
   - "3.6"
 install:
   - pip install -r requirements.txt
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script:
   - python manage.py test
 after_success:
   - codecov
+  - coverage xml
+  - ./cc-test-reporter format-coverage -d -t coverage.py coverage.xml
+  - if [[ "$TRAVIS_TEST_RESULT" == 0 ]]; then ./cc-test-reporter upload-coverage -d -s 2; fi
