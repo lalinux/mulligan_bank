@@ -13,8 +13,7 @@ class AccountModelTest(TestCase):
         self.user = get_user_model().objects.create(username=self.username)
 
     def test_string_representation(self):
-        account = Account(owner=self.user)
-        account.save()
+        account = self._create_account()
         self.assertEqual(str(account),
                          "[Bank Account #1 belongs to %s, is active and has a balance of $0" % self.username)
 
@@ -24,26 +23,22 @@ class AccountModelTest(TestCase):
         account.save()
 
     def test_balance_default_0(self):
-        account = Account(owner=self.user)
-        account.save()
+        account = self._create_account()
         self.assertEqual(0, account.balance)
 
     def test_deposit(self):
-        account = Account(owner=self.user)
-        account.save()
+        account = self._create_account()
         account.deposit(200)
         self.assertEqual(200, account.balance)
 
     def test_withdrawal(self):
-        account = Account(owner=self.user)
-        account.save()
+        account = self._create_account()
         account.deposit(200)
         account.withdrawal(100)
         self.assertEqual(100, account.balance)
 
     def test_record_history(self):
-        account = Account(owner=self.user)
-        account.save()
+        account = self._create_account()
         account.deposit(200)
         account.withdrawal(100)
         self.assertEqual(2, len(account.record_history()))
@@ -56,26 +51,27 @@ class AccountModelTest(TestCase):
 
     @unittest.expectedFailure
     def test_deposits_negative(self):
-        account = Account(owner=self.user)
-        account.save()
+        account = self._create_account()
         account.deposit(-100)
 
     @unittest.expectedFailure
     def test_withdrawal_without_enough_funds(self):
-        account = Account(owner=self.user)
-        account.save()
+        account = self._create_account()
         account.withdrawal(100)
 
     @unittest.expectedFailure
     def test_withdrawal_negative(self):
-        account = Account(owner=self.user)
-        account.save()
+        account = self._create_account()
         account.withdrawal(-100)
 
     def test_get_absolute_url(self):
+        account = self._create_account()
+        self.assertIsNotNone(account.get_absolute_url())
+
+    def _create_account(self):
         account = Account(owner=self.user)
         account.save()
-        self.assertIsNotNone(account.get_absolute_url())
+        return account
 
 
 class ProjectTests(TestCase):
