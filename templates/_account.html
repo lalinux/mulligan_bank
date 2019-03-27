@@ -1,0 +1,9 @@
+<article>
+    <h2><a href="{{ account.get_absolute_url }}">Account {{ account.id }}</a></h2>
+    <dl>
+        <dt>Username:</dt><dd>{{ account.owner.username }}</dd>
+        <dt>Owner:</dt><dd>{{ account.owner.get_full_name }}</dd>
+        <dt>Account created:</dt><dd><time>{{ account.created_at|date }}</time></dd>
+        <dt>Balance:</dt><dd>${{ account.balance }}</dd>
+    </dl>
+</article>

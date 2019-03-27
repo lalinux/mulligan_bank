@@ -71,3 +71,46 @@ class AccountModelTest(TestCase):
         account = Account(owner=self.user)
         account.save()
         account.withdrawal(-100)
+
+    def test_get_absolute_url(self):
+        account = Account(owner=self.user)
+        account.save()
+        self.assertIsNotNone(account.get_absolute_url())
+
+
+class ProjectTests(TestCase):
+
+    def setUp(self):
+        self.user = get_user_model().objects.create(username='client_1234')
+
+    def test_one_account(self):
+        Account.objects.create(owner=self.user, balance=100, active=True)
+        response = self.client.get('/')
+        self.assertContains(response, self.user.get_username())
+        self.assertContains(response, "$100.00")
+
+    def test_two_account(self):
+        Account.objects.create(owner=self.user, balance=100, active=True)
+        Account.objects.create(owner=self.user, balance=200, active=True)
+        response = self.client.get('/')
+        self.assertContains(response, self.user.get_username())
+        self.assertContains(response, "$100.00")
+        self.assertContains(response, "$200.00")
+
+    def test_no_accounts(self):
+        response = self.client.get('/')
+        self.assertContains(response, 'No accounts created yet.')
+
+
+class AccountViewTest(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create(username='client_1234')
+        self.account = Account.objects.create(owner=self.user, balance=100, active=True)
+
+    def test_basic_view(self):
+        response = self.client.get(self.account.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+    def test_title_in_entry(self):
+        response = self.client.get(self.account.get_absolute_url())
+        self.assertContains(response, self.account.owner.username)

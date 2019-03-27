@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% for account in account_list %}
+        {% include "_account.html" with account=account only %}
+    {%  empty %}
+        <p>No accounts created yet.</p>
+    {% endfor %}
+{% endblock content %}

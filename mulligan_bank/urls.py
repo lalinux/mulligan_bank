@@ -20,5 +20,7 @@ import bank.urls
 from . import views
 
 urlpatterns = [
+    url(r'^$', views.HomeView.as_view(), name='home'),
+    url(r'^', include(bank.urls)),
     url(r'^admin/', admin.site.urls),
 ]
