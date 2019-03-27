@@ -1,7 +1,4 @@
 language: python
-env:
-  global:
-    CC_TEST_REPORTER_ID=c76682da4ab8561653efe5e30d0fb64f7500e80115726587a908acf3bac5de87
 python:
   - "3.6"
 install:
