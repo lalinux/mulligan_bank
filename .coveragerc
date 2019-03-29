@@ -1,0 +1,8 @@
+[run]
+omit =
+    manage.py
+    *wsgy.py*
+    *apps.py*
+    *migrations*
+    /usr/lib/python3/dist-packages/*
+    /home/egarcia/.local/*
